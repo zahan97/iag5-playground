@@ -1,0 +1,34 @@
+{
+  "$id": "root",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "hostname": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Device hostname to check, e.g. lab-rtr-03"
+    },
+    "mgmt_ip": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Management IPv4 address with prefix length, e.g. 10.10.10.13/24"
+    },
+    "model": {
+      "type": "string",
+      "minLength": 1,
+      "description": "NetBox device type slug, e.g. csr1000v"
+    },
+    "platform": {
+      "type": "string",
+      "minLength": 1,
+      "description": "NetBox platform slug, e.g. cisco-ios"
+    },
+    "role": {
+      "type": "string",
+      "minLength": 1,
+      "description": "NetBox device role slug, e.g. edge-router"
+    }
+  },
+  "required": ["hostname", "mgmt_ip", "model", "platform", "role"],
+  "additionalProperties": false
+}
