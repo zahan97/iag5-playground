@@ -1,0 +1,23 @@
+{
+  "$id": "root",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "host":       {"type": "string"},
+    "port":       {"type": "integer"},
+    "action":     {"type": "string", "enum": ["capabilities", "get", "update", "replace", "union_replace", "delete", "time", "reboot", "reboot_status", "cancel_reboot"]},
+    "username":   {"type": "string"},
+    "password":   {"type": "string"},
+    "tls":        {"type": "boolean"},
+    "cafile":     {"type": "string"},
+    "servername": {"type": "string"},
+    "path":       {"type": "string"},
+    "value":      {"type": "string"},
+    "updates":    {"type": "string"},
+    "type":       {"type": "string", "enum": ["all", "config", "state"]},
+    "delay":      {"type": "number"},
+    "timeout":    {"type": "number"}
+  },
+  "required": ["host", "action"],
+  "additionalProperties": false
+}
