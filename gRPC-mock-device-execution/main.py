@@ -150,7 +150,8 @@ def run(a, ch, md):
 
     def call(service, method, req, resp_name):
         resp = msg(resp_name)
-        return ch.unary_unary("/%s/%s" % (service, method), request_serializer=req.SerializeToString,
+        # class-level method: grpc calls serializer(req); a bound method breaks on the pure-python protobuf backend
+        return ch.unary_unary("/%s/%s" % (service, method), request_serializer=type(req).SerializeToString,
                               response_deserializer=resp.FromString)(req, **kw)
 
     act = a.action
@@ -192,6 +193,17 @@ def run(a, ch, md):
         return {"reboot": "cancelled"}
 
 
+def drop_empty(argv):
+    """IAG passes every decorator field; unset ones arrive as --name '' (or --name=). Drop them so defaults apply."""
+    out = []
+    for x in argv:
+        if x == "" and out and out[-1].startswith("--"):
+            out.pop()
+        elif not (x.startswith("--") and x.endswith("=")):
+            out.append(x)
+    return out
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--host", required=True)
@@ -208,7 +220,7 @@ def main(argv=None):
     ap.add_argument("--type", default="all", choices=["all", "config", "state"], help="for get")
     ap.add_argument("--delay", type=float, default=0, help="reboot delay in seconds")
     ap.add_argument("--timeout", type=float, default=10)
-    a = ap.parse_args(argv)
+    a = ap.parse_args(drop_empty(sys.argv[1:] if argv is None else argv))
 
     try:
         if a.action == "delete" and not a.path:
